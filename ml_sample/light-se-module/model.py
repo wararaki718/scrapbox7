@@ -26,7 +26,7 @@ class NNModel(nn.Module):
     def __init__(self, n_input: int, n_output: int, n_hidden: int=128) -> None:
         super(NNModel, self).__init__()
         layers = [
-            LightSE(n_input, n_hidden),
+            LightSE(n_hidden, n_hidden),
             nn.Linear(n_hidden, n_hidden),
             nn.Dropout(p=0.9),
             nn.Sigmoid(),

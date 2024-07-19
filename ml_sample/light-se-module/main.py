@@ -1,7 +1,8 @@
 import numpy as np
 import scipy.sparse as sps
 import torch
-from sklearn.feature_extraction.text import TfidfVectorizer
+# from sklearn.feature_extraction.text import TfidfVectorizer
+from fastembed import TextEmbedding
 from sklearn.model_selection import train_test_split
 from torchtext.datasets import AG_NEWS
 from torch.utils.data import DataLoader
@@ -29,21 +30,22 @@ def main() -> None:
     print()
     
     # vectorized
-    vectorizer = TfidfVectorizer(max_df=0.99, min_df=0.01)
-    X = vectorizer.fit_transform(sentences)
+    # vectorizer = TfidfVectorizer(max_df=0.99, min_df=0.01)
+    model_name = "BAAI/bge-small-en-v1.5"
+    text_embedder = TextEmbedding(model_name=model_name)
+    # X = vectorizer.fit_transform(sentences)
+    # X = list(text_embedder.embed(sentences))
+    train_sentences, valid_sentences, y_train, y_valid = train_test_split(sentences, labels, test_size=0.2, random_state=42)
 
-    X_train, X_valid, y_train, y_valid = train_test_split(X, labels, test_size=0.2, random_state=42)
-    print(f"vocabs: {len(vectorizer.get_feature_names_out())}")
+    # X_train, X_valid, y_train, y_valid = train_test_split(X, labels, test_size=0.2, random_state=42)
+    # print(f"vocabs: {len(vectorizer.get_feature_names_out())}")
+    X_train = [embedding for embedding in text_embedder.embed(train_sentences)]
+    X_valid = [embedding for embedding in text_embedder.embed(valid_sentences)]
     print()
 
-    # sorted
-    indices = np.argsort(y_train)
-    X_train: sps.csr_matrix = X_train[indices]
-    y_train: np.ndarray = y_train[indices]
-
     # create loader
-    train_dataset = AGNewsDataset(torch.Tensor(X_train.toarray()), torch.Tensor(y_train).long())
-    valid_dataset = AGNewsDataset(torch.Tensor(X_valid.toarray()), torch.Tensor(y_valid).long())
+    train_dataset = AGNewsDataset(torch.Tensor(X_train), torch.Tensor(y_train).long())
+    valid_dataset = AGNewsDataset(torch.Tensor(X_valid), torch.Tensor(y_valid).long())
 
     # shuffled model
     print("shuffled dataset:")
@@ -51,7 +53,7 @@ def main() -> None:
     valid_loader = DataLoader(valid_dataset, batch_size=256, shuffle=False)
 
     shuffled_model = NNModel(
-        n_input=X.shape[1],
+        n_input=train_dataset.shape[1],
         n_output=len(set(labels)),
     )
     shuffled_model = try_gpu(shuffled_model)
@@ -68,11 +70,11 @@ def main() -> None:
     for label, sentence in test:
         labels.append(label)
         sentences.append(sentence)
-    X_test = vectorizer.transform(sentences)
+    X_test = [embedding for embedding in text_embedder.embed(sentences)]
     y_test = np.array(labels) - 1 # scaling
 
     # evaluate
-    test_dataset = AGNewsDataset(torch.Tensor(X_test.toarray()), torch.Tensor(y_test).long())
+    test_dataset = AGNewsDataset(torch.Tensor(X_test), torch.Tensor(y_test).long())
     evaluator = Evaluator()
 
     result = evaluator.evaluate(shuffled_model, DataLoader(test_dataset, batch_size=256, shuffle=False))

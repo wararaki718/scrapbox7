@@ -12,5 +12,8 @@ class AGNewsDataset(Dataset):
     def __len__(self) -> int:
         return len(self._X)
     
+    def shape(self) -> Tuple[int, int, int]:
+        return self._X.shape
+    
     def __getitem__(self, index: int) -> Tuple[torch.Tensor, torch.Tensor]:
         return self._X[index], self._y[index]
