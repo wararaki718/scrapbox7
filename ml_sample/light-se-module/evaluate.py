@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 
+from utils import try_gpu
+
 
 class Evaluator:
     def evaluate(self, model: nn.Module, loader: DataLoader) -> float:
@@ -10,6 +12,9 @@ class Evaluator:
         total = 0
         with torch.no_grad():
             for X, y in loader:
+                X: torch.Tensor = try_gpu(X)
+                y: torch.Tensor = try_gpu(y)
+
                 y_pred = model(X)
                 _, y_labels = torch.max(y_pred, 1)
                 total += y.size(0)

@@ -1,5 +1,4 @@
 import numpy as np
-import scipy.sparse as sps
 import torch
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
@@ -8,7 +7,7 @@ from torch.utils.data import DataLoader
 
 from dataset import AGNewsDataset
 from evaluate import Evaluator
-from model import NNModel
+from model import NNModel, LightSENNModel
 from trainer import Trainer
 from utils import try_gpu
 
@@ -36,28 +35,42 @@ def main() -> None:
     print(f"vocabs: {len(vectorizer.get_feature_names_out())}")
     print()
 
-    # sorted
-    indices = np.argsort(y_train)
-    X_train: sps.csr_matrix = X_train[indices]
-    y_train: np.ndarray = y_train[indices]
+    # reshape
+    X_train: np.ndarray = X_train.toarray().reshape((X_train.shape[0], 1, X_train.shape[1]))
+    X_valid: np.ndarray = X_valid.toarray().reshape((X_valid.shape[0], 1, X_valid.shape[1]))
 
     # create loader
-    train_dataset = AGNewsDataset(torch.Tensor(X_train.toarray()), torch.Tensor(y_train).long())
-    valid_dataset = AGNewsDataset(torch.Tensor(X_valid.toarray()), torch.Tensor(y_valid).long())
+    train_dataset = AGNewsDataset(torch.Tensor(X_train), torch.Tensor(y_train).long())
+    valid_dataset = AGNewsDataset(torch.Tensor(X_valid), torch.Tensor(y_valid).long())
 
-    # shuffled model
-    print("shuffled dataset:")
+    # nn model
+    print("NNModel train:")
     train_loader = DataLoader(train_dataset, batch_size=256, shuffle=True)
     valid_loader = DataLoader(valid_dataset, batch_size=256, shuffle=False)
 
-    shuffled_model = NNModel(
+    model = NNModel(
         n_input=X.shape[1],
         n_output=len(set(labels)),
     )
-    shuffled_model = try_gpu(shuffled_model)
+    model = try_gpu(model)
     trainer = Trainer(n_epochs=100)
-    optimizer = torch.optim.Adam(shuffled_model.parameters(), lr=1e-3)
-    trainer.train(shuffled_model, optimizer, train_loader, valid_loader)
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+    _ = trainer.train(model, optimizer, train_loader, valid_loader)
+    print("model trained!")
+    print()
+
+    print("LightSE train:")
+    train_loader = DataLoader(train_dataset, batch_size=256, shuffle=True)
+    valid_loader = DataLoader(valid_dataset, batch_size=256, shuffle=False)
+
+    light_se_model = LightSENNModel(
+        n_input=X.shape[1],
+        n_output=len(set(labels)),
+    )
+    light_se_model = try_gpu(light_se_model)
+    trainer = Trainer(n_epochs=100)
+    optimizer = torch.optim.Adam(light_se_model.parameters(), lr=1e-3)
+    _ = trainer.train(light_se_model, optimizer, train_loader, valid_loader)
     print("model trained!")
     print()
 
@@ -69,14 +82,18 @@ def main() -> None:
         labels.append(label)
         sentences.append(sentence)
     X_test = vectorizer.transform(sentences)
+    X_test: np.ndarray = X_test.toarray().reshape((X_test.shape[0], 1, X_test.shape[1]))
     y_test = np.array(labels) - 1 # scaling
 
     # evaluate
-    test_dataset = AGNewsDataset(torch.Tensor(X_test.toarray()), torch.Tensor(y_test).long())
-    evaluator = Evaluator()
+    test_dataset = AGNewsDataset(torch.Tensor(X_test), torch.Tensor(y_test).long())
 
-    result = evaluator.evaluate(shuffled_model, DataLoader(test_dataset, batch_size=256, shuffle=False))
-    print(f"shuffled model: {result}")
+    evaluator = Evaluator()
+    result = evaluator.evaluate(model, DataLoader(test_dataset, batch_size=256, shuffle=False))
+    print(f"nn model: {result}")
+
+    result = evaluator.evaluate(light_se_model, DataLoader(test_dataset, batch_size=256, shuffle=False))
+    print(f"light se: {result}")
 
     print("DONE")
 
