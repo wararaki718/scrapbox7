@@ -20,7 +20,14 @@ def main() -> None:
 
     with torch.no_grad():
         last_hidden_states: torch.Tensor = model(input_ids)[0]
+    print(last_hidden_states.shape)
 
+    # batch
+    output: dict = tokenizer.batch_encode_plus([text, text], add_special_tokens=True, return_tensors="pt")
+    input_ids = try_gpu(output["input_ids"])
+
+    with torch.no_grad():
+        last_hidden_states: torch.Tensor = model(input_ids)[0]
     print(last_hidden_states.shape)
 
     print("DONE")
