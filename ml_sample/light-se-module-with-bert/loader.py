@@ -4,7 +4,7 @@ from torchtext.datasets import AG_NEWS
 
 class NewsLoader:
     @classmethod
-    def load(cls, target: str="train") -> tuple[np.ndarray, np.ndarray]:
+    def load(cls, target: str="train", is_shuffle: bool=False) -> tuple[np.ndarray, np.ndarray]:
         if target == "train":
             data, _ = AG_NEWS()
         else:
@@ -17,5 +17,11 @@ class NewsLoader:
             sentences.append(sentence)
         labels = np.array(labels) - 1 # scaling
         sentences = np.array(sentences)
+
+        if is_shuffle:
+            indices = np.arange(labels.shape[0])
+            np.random.shuffle(indices)
+            sentences = sentences[indices]
+            labels = labels[indices]
 
         return sentences, labels

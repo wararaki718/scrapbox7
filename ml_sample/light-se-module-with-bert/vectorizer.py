@@ -22,5 +22,5 @@ class BERTVectorizer:
 
         with torch.no_grad():
             last_hidden_states: torch.Tensor = self._model(input_ids)[0]
-        return last_hidden_states.cpu()
+        return last_hidden_states.cpu().detach()
     
