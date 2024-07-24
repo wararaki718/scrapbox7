@@ -9,10 +9,10 @@ class LightSE(nn.Module):
         self._linear = nn.Linear(in_features, in_features)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        z = torch.mean(x, dim=-1, out=None)
+        z = torch.mean(x, dim=1, out=None)
         a = self._linear(z)
         a = self._softmax(a)
-        out = x * torch.unsqueeze(a, dim=2)
+        out = x * torch.unsqueeze(a, dim=1)
         out = torch.flatten(x + out, start_dim=1)
         return out
 

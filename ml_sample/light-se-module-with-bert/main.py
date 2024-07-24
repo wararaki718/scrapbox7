@@ -36,12 +36,12 @@ def main() -> None:
 
     embedding_dir = Path("./data")
     train_embedding_dir = embedding_dir / "train"
-    output_files = save_embeddings(train_sentences, train_labels, train_embedding_dir, vectorizer)
-    print(output_files)
+    #output_files = save_embeddings(train_sentences, train_labels, train_embedding_dir, vectorizer)
+    #print(output_files)
 
     valid_embedding_dir = embedding_dir / "valid"
-    output_files = save_embeddings(valid_sentences, valid_labels, valid_embedding_dir, vectorizer)
-    print(output_files)
+    #output_files = save_embeddings(valid_sentences, valid_labels, valid_embedding_dir, vectorizer)
+    #print(output_files)
 
     train_dataset = AGNewsDataset(train_embedding_dir, is_shuffle=True)
     valid_dataset = AGNewsDataset(valid_embedding_dir)

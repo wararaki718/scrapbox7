@@ -13,7 +13,7 @@ class AGNewsDataset(IterableDataset):
 
     def __iter__(self) -> Generator[tuple[torch.Tensor, torch.Tensor], None, None]:
         embedding_paths = np.array(sorted(self._data_dir.glob("embedding_*.pt")))
-        label_paths = np.array(sorted(self._data_dir.glob("label_*.pt")))
+        label_paths = np.array(sorted(self._data_dir.glob("labels_*.pt")))
 
         if self._is_shuffle:
             indices = np.arange(embedding_paths.shape[0])
