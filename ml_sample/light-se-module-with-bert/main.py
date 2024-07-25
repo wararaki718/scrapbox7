@@ -58,7 +58,7 @@ def main() -> None:
         n_output=len(set(labels)),
     )
     model = try_gpu(model)
-    trainer = Trainer(n_epochs=100)
+    trainer = Trainer(n_epochs=1)
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
     _ = trainer.train(model, optimizer, train_loader, valid_loader)
     print("model trained!")
@@ -71,7 +71,7 @@ def main() -> None:
         n_output=len(set(labels))
     )
     light_se_model = try_gpu(light_se_model)
-    trainer = Trainer(n_epochs=100)
+    trainer = Trainer(n_epochs=1)
     optimizer = torch.optim.Adam(light_se_model.parameters(), lr=1e-3)
     _ = trainer.train(light_se_model, optimizer, train_loader, valid_loader)
     print("light se model trained!")

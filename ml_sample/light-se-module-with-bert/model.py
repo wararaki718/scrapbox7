@@ -9,11 +9,17 @@ class LightSE(nn.Module):
         self._linear = nn.Linear(in_features, in_features)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        print(f"x: {x.shape}")
         z = torch.mean(x, dim=1, out=None)
+        print(f"z: {z.shape}")
         a = self._linear(z)
+        print(f"a: {a.shape}")
         a = self._softmax(a)
+        print(f"a: {a.shape}")
         out = x * torch.unsqueeze(a, dim=1)
+        print(f"out: {out.shape}")
         out = torch.flatten(x + out, start_dim=1)
+        print(f"out: {out.shape}")
         return out
 
 
@@ -33,6 +39,7 @@ class LightSENNModel(nn.Module):
         self._model = nn.Sequential(*layers)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = torch.mean(x, dim=1)
         return self._model(x)
 
 
@@ -51,5 +58,5 @@ class NNModel(nn.Module):
         self._model = nn.Sequential(*layers)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = torch.flatten(x, start_dim=1)
+        x = torch.mean(x, dim=1)
         return self._model(x)
