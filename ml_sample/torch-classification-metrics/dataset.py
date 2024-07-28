@@ -12,6 +12,9 @@ class IrisDataset(Dataset):
     def __len__(self) -> int:
         return len(self._X)
     
+    def get_labels(self) -> torch.Tensor:
+        return torch.unique(self._y)
+    
     def shape(self) -> Tuple[int, int, int]:
         return self._X.shape
     

@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 from utils import try_gpu
 
 
-def precision_score_macro(model: nn.Module, loader: DataLoader) -> float:
+def f1_score_macro(model: nn.Module, loader: DataLoader) -> float:
     model.eval()
 
     score = 0.0
@@ -22,7 +22,8 @@ def precision_score_macro(model: nn.Module, loader: DataLoader) -> float:
             for label in labels:
                 tp = ((y == label) & (y_preds == label)).sum()
                 fp = ((y != label) & (y_preds == label)).sum()
+                fn = ((y == label) & (y_preds != label)).sum()
                 if tp > 0:
-                    score += (tp / (tp + fp))
+                    score += (2*tp / (2*tp + fp + fn))
             total += 1
     return (score / len(labels)) / total

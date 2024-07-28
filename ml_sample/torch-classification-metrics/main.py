@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
 
 from dataset import IrisDataset
-from metrics.accuracy import accuracy_score
+from metrics import accuracy_score, f1_score_macro, precision_score_macro, recall_score_macro
 from model import NNModel
 from trainer import Trainer
 from utils import try_gpu
@@ -42,7 +42,16 @@ def main() -> None:
     # evaluate
     test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False)
     score = accuracy_score(model, test_loader)
-    print(f"accuracy_score: {score}")
+    print(f"accuracy_score : {score}")
+
+    score = precision_score_macro(model, test_loader)
+    print(f"precision_score: {score}")
+    
+    score = recall_score_macro(model, test_loader)
+    print(f"recall_score   : {score}")
+
+    score = f1_score_macro(model, test_loader)
+    print(f"f1_score       : {score}")
 
     print("DONE")
 
