@@ -20,9 +20,9 @@ def f1_score_macro(model: nn.Module, loader: DataLoader) -> float:
             _, y_preds = torch.max(output, 1)
             # precision average=macro
             for label in labels:
-                tp = ((y == label) & (y_preds == label)).sum()
-                fp = ((y != label) & (y_preds == label)).sum()
-                fn = ((y == label) & (y_preds != label)).sum()
+                tp = ((y == label) & (y_preds == label)).sum().item()
+                fp = ((y != label) & (y_preds == label)).sum().item()
+                fn = ((y == label) & (y_preds != label)).sum().item()
                 if tp > 0:
                     score += (2*tp / (2*tp + fp + fn))
             total += 1

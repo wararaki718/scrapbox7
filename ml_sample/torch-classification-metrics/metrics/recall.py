@@ -20,8 +20,8 @@ def recall_score_macro(model: nn.Module, loader: DataLoader) -> float:
             _, y_preds = torch.max(output, 1)
             # recall average=macro
             for label in labels:
-                tp = ((y == label) & (y_preds == label)).sum()
-                fn = ((y == label) & (y_preds != label)).sum()
+                tp = ((y == label) & (y_preds == label)).sum().item()
+                fn = ((y == label) & (y_preds != label)).sum().item()
                 if tp > 0:
                     score += (tp / (tp + fn))
             total += 1
