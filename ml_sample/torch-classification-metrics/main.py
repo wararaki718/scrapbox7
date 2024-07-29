@@ -4,7 +4,15 @@ from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
 
 from dataset import IrisDataset
-from metrics import accuracy_score, f1_score_macro, precision_score_macro, recall_score_macro
+from metrics import (
+    accuracy_score,
+    f1_score_macro,
+    f1_score_micro,
+    precision_score_macro,
+    precision_score_micro,
+    recall_score_macro,
+    recall_score_micro,
+)
 from model import NNModel
 from trainer import Trainer
 from utils import try_gpu
@@ -43,18 +51,31 @@ def main() -> None:
     print()
 
     # evaluate
+    # accuracy
     test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False)
     score = accuracy_score(model, test_loader)
-    print(f"accuracy_score : {score}")
+    print(f"accuracy_score         : {score}")
 
+    # precision
     score = precision_score_macro(model, test_loader)
-    print(f"precision_score: {score}")
-    
-    score = recall_score_macro(model, test_loader)
-    print(f"recall_score   : {score}")
+    print(f"precision_score (macro): {score}")
 
+    score = precision_score_micro(model, test_loader)
+    print(f"precision_score (micro): {score}")
+    
+    # recall
+    score = recall_score_macro(model, test_loader)
+    print(f"recall_score (macro)   : {score}")
+
+    score = recall_score_micro(model, test_loader)
+    print(f"recall_score (micro)   : {score}")
+
+    # f1
     score = f1_score_macro(model, test_loader)
-    print(f"f1_score       : {score}")
+    print(f"f1_score (macro)       : {score}")
+
+    score = f1_score_micro(model, test_loader)
+    print(f"f1_score (micro)       : {score}")
 
     print("DONE")
 
