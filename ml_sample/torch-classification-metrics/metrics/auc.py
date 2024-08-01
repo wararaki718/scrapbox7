@@ -36,8 +36,12 @@ if __name__ == "__main__":
     a = torch.Tensor([1, 1, 2, 2])
     b = torch.Tensor([0.1, 0.4, 0.35, 0.8])
     tps, fps, thresholds = roc_curve(a, b, pos_label=2)
+    print("roc_curve:")
     print(tps)
     print(fps)
     print(thresholds)
+    print()
+
+    print("auc:")
     print(auc_score(tps, fps))
     print()
