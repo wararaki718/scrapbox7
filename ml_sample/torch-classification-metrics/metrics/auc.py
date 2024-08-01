@@ -31,7 +31,6 @@ def auc_score(tps: torch.Tensor, fps: torch.Tensor) -> float:
     return torch.trapezoid(tps, fps)
 
 
-
 if __name__ == "__main__":
     a = torch.Tensor([1, 1, 2, 2])
     b = torch.Tensor([0.1, 0.4, 0.35, 0.8])
