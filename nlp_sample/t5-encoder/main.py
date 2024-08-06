@@ -1,5 +1,5 @@
 import torch
-from transformers import T5Tokenizer, T5ForConditionalGeneration
+from transformers import T5Tokenizer, T5EncoderModel
 
 from utils import try_gpu
 
@@ -7,23 +7,23 @@ from utils import try_gpu
 def main() -> None:
     model_name = "google-t5/t5-small"
     tokenizer = T5Tokenizer.from_pretrained(model_name)
-    model = T5ForConditionalGeneration.from_pretrained(model_name)
+    model = T5EncoderModel.from_pretrained(model_name)
     model = try_gpu(model)
 
     input_ids: torch.Tensor = tokenizer(
-        "translate English to German: The house is wonderful.",
+        "Studies have been shown that owning a dog is good for you",
         return_tensors="pt",
     ).input_ids
     print(input_ids)
     print()
 
     input_ids = try_gpu(input_ids)
-    outputs: torch.Tensor = model.generate(input_ids).cpu()
+    outputs: torch.Tensor = model(input_ids)
     print(outputs)
     print()
 
-    result = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    print(result)
+    result = outputs.last_hidden_state.cpu()
+    print(result.shape)
     print()
 
     print("DONE")
