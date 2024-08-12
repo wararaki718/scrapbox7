@@ -20,12 +20,15 @@ def main() -> None:
 
     train_dataset = MNIST(os.getcwd(), download=True, train=True, transform=ToTensor())
     train_dataset, valid_dataset = train_test_split(train_dataset, train_ratio=0.8)
+    print(f"train_dataset: {len(train_dataset)}", flush=True)
+    print(f"valid_dataset: {len(valid_dataset)}", flush=True)
 
     train_loader = DataLoader(train_dataset)
     valid_loader = DataLoader(valid_dataset)
 
     test_dataset = MNIST(os.getcwd(), download=True, train=False, transform=ToTensor())
     test_loader = DataLoader(test_dataset)
+    print(f"test_dataset: {len(test_dataset)}")
     print("data loaded!", flush=True)
 
     trainer = lightning.Trainer(limit_train_batches=100, max_epochs=1, accelerator="gpu")
