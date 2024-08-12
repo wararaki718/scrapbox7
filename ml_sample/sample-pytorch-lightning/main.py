@@ -17,13 +17,18 @@ def main() -> None:
     autoencoder = LightningAutoEncoder(encoder, decoder)
     print("model defined!", flush=True)
 
-    dataset = MNIST(os.getcwd(), download=True, transform=ToTensor())
-    train_loader = DataLoader(dataset)
+    train_dataset = MNIST(os.getcwd(), download=True, train=True, transform=ToTensor())
+    train_loader = DataLoader(train_dataset)
+    test_dataset = MNIST(os.getcwd(), download=True, train=False, transform=ToTensor())
+    test_loader = DataLoader(test_dataset)
     print("data loaded!", flush=True)
 
     trainer = lightning.Trainer(limit_train_batches=100, max_epochs=1, accelerator="gpu")
     trainer.fit(model=autoencoder, train_dataloaders=train_loader)
     print("model trained!", flush=True)
+
+    trainer.test(model=autoencoder, dataloaders=test_loader)
+    print("model tested!")
 
     filepath = Path("./lightning_logs/version_0/checkpoints/epoch=0-step=100.ckpt")
     encoder = NNEncoder()
