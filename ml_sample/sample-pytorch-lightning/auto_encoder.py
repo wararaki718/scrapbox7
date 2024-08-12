@@ -22,6 +22,15 @@ class LightningAutoEncoder(lightning.LightningModule):
 
         return loss
 
+    def validation_step(self, batch: Tuple[torch.Tensor, torch.Tensor], batch_index: int) -> torch.Tensor:
+        x, _ = batch
+        x = x.view(x.size(0), -1)
+        z = self._encoder(x)
+        x_hat = self._decoder(z)
+
+        loss = nn.functional.mse_loss(x_hat, x)
+        self.log("valid_loss", loss)
+
     def test_step(self, batch: Tuple[torch.Tensor, torch.Tensor], batch_index: int) -> torch.Tensor:
         x, _ = batch
         x = x.view(x.size(0), -1)

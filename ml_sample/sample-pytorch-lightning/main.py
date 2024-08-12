@@ -9,6 +9,7 @@ from torchvision.transforms import ToTensor
 
 from auto_encoder import LightningAutoEncoder
 from model import NNEncoder, NNDecoder
+from splitter import train_test_split
 
 
 def main() -> None:
@@ -18,13 +19,17 @@ def main() -> None:
     print("model defined!", flush=True)
 
     train_dataset = MNIST(os.getcwd(), download=True, train=True, transform=ToTensor())
+    train_dataset, valid_dataset = train_test_split(train_dataset, train_ratio=0.8)
+
     train_loader = DataLoader(train_dataset)
+    valid_loader = DataLoader(valid_dataset)
+
     test_dataset = MNIST(os.getcwd(), download=True, train=False, transform=ToTensor())
     test_loader = DataLoader(test_dataset)
     print("data loaded!", flush=True)
 
     trainer = lightning.Trainer(limit_train_batches=100, max_epochs=1, accelerator="gpu")
-    trainer.fit(model=autoencoder, train_dataloaders=train_loader)
+    trainer.fit(model=autoencoder, train_dataloaders=train_loader, val_dataloaders=valid_loader)
     print("model trained!", flush=True)
 
     trainer.test(model=autoencoder, dataloaders=test_loader)
