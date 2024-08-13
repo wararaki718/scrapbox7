@@ -18,7 +18,7 @@ class LightningAutoEncoder(lightning.LightningModule):
         x_hat = self._decoder(z)
 
         loss = nn.functional.mse_loss(x_hat, x)
-        self.log("train_loss", loss)
+        self.log_dict({"train_loss": loss})
 
         return loss
 
@@ -29,7 +29,7 @@ class LightningAutoEncoder(lightning.LightningModule):
         x_hat = self._decoder(z)
 
         loss = nn.functional.mse_loss(x_hat, x)
-        self.log("valid_loss", loss)
+        self.log_dict({"valid_loss": loss})
 
     def test_step(self, batch: Tuple[torch.Tensor, torch.Tensor], batch_index: int) -> torch.Tensor:
         x, _ = batch
@@ -38,7 +38,7 @@ class LightningAutoEncoder(lightning.LightningModule):
         x_hat = self._decoder(z)
         
         loss = nn.functional.mse_loss(x_hat, x)
-        self.log("test_loss", loss)
+        self.log_dict({"test_loss": loss})
 
     def configure_optimizers(self) -> torch.optim.Adam:
         optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
