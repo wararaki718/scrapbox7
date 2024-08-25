@@ -17,7 +17,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("subprojects.Appkt")
+    mainClass.set("subprojects.AppKt")
 }
 
 tasks.test {
