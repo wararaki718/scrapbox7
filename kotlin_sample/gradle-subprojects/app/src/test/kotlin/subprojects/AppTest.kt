@@ -11,4 +11,10 @@ internal class AppTest {
         val actual = testApp.greeting()
         assertEquals("Hello", actual)
     }
+
+    @Test
+    fun testCustomGreeting() {
+        val actual = testApp.customGreeting()
+        assertEquals("custom  Hello", actual)
+    }
 }
