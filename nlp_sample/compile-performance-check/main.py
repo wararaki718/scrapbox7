@@ -16,16 +16,16 @@ def main() -> None:
     evaluate(base_model, base_tokenizer, texts)
 
     print("compile:")
-    tokenizer = torch.compile(base_tokenizer)
+    #tokenizer = torch.compile(base_tokenizer)
     model = torch.compile(base_model)
-    evaluate(model, tokenizer, texts)
-    del model, tokenizer
+    evaluate(model, base_tokenizer, texts)
+    #del model, tokenizer
 
     print("compile (openvino):")
-    tokenizer = torch.compile(base_tokenizer, backend="openvino")
+    #tokenizer = torch.compile(base_tokenizer, backend="openvino")
     model = torch.compile(base_model, backend="openvino")
-    evaluate(model, tokenizer, texts)
-    del model, tokenizer
+    evaluate(model, base_tokenizer, texts)
+    #del model, tokenizer
 
     print("DONE")
 
