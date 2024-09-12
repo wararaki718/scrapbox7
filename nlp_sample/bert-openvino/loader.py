@@ -38,7 +38,7 @@ class ModelLoader:
             raise
 
         throughput = {'PERFORMANCE_HINT': 'THROUGHPUT'}
-        compiled_model = core.compile_model(model, "CPU", throughput)
+        compiled_model = core.compile_model(openvino_model, "CPU", throughput)
         #compiled_model = core.compile_model(openvino_model, "AUTO")
         
         return compiled_model, tokenizer
