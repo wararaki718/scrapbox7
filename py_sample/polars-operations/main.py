@@ -12,7 +12,7 @@ def main() -> None:
         print(id_, name)
     print()
 
-    print(df.select(pl.col("ide")))
+    print(df.select(pl.col("id")))
     print("DONE")
 
 
