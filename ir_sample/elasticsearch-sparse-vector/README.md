@@ -1,4 +1,4 @@
-# percolate query
+# sparse vector
 
 ## setup
 
