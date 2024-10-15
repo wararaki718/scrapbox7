@@ -1,0 +1,16 @@
+{
+    "mappings": {
+        "properties": {
+            "l2_vector": {
+                "type": "dense_vector",
+                "dims": 3,
+                "similarity": "l2_norm"
+            },
+            "cosine_vector": {
+                "type": "dense_vector",
+                "dims": 3,
+                "similarity": "cosine"
+            }
+        }
+    }
+}
