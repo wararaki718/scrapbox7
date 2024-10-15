@@ -1,0 +1,11 @@
+{
+    "mappings": {
+        "properties": {
+            "custom_vector": {
+                "type": "dense_vector",
+                "dims": 3,
+                "similarity": "l2_norm"
+            }
+        }
+    }
+}
