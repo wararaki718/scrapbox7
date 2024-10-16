@@ -1,4 +1,4 @@
-# reranking
+# rescore reranking
 
 ## setup
 
