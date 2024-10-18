@@ -11,8 +11,9 @@ def load_dummy_data(n_data: int, query_input_size: int, document_input_size: int
 
     data_loader = DataLoader(
         TripletDataset(X_query, X_pos, X_neg),
-        batch_size=50,
+        batch_size=5,
         shuffle=True,
         num_workers=2,
+        persistent_workers=True,
     )
     return data_loader
