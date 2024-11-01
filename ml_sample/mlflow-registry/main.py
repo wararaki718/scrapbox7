@@ -66,6 +66,22 @@ def main() -> None:
         print(result)
         print("model created!")
         print()
+    
+        # show models
+        for info in client.search_registered_models():
+            print(info)
+        print()
+    
+    # model load
+    model_name = "sk-learn-random-forest-reg-model"
+    model_version = 1
+    model_uri = f"models:/{model_name}/{model_version}"
+    model = mlflow.pyfunc.load_model(model_uri=model_uri)
+    print("model loaded!")
+    print()
+
+    y_pred = model.predict(X_test)
+    print(f"y_pred: {y_pred.shape}")
     print("DONE")
 
 

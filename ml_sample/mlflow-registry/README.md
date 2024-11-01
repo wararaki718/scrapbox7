@@ -21,3 +21,9 @@ upload experiment result
 ```shell
 python main.py
 ```
+
+api
+
+```shell
+bash api.sh
+```
