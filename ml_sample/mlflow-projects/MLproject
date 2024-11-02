@@ -1,0 +1,14 @@
+name: sample_prject
+
+python_env: python_env.yml
+
+entry_points:
+  main:
+    parameters:
+      alpha: {type: float, default: 0.1}
+      l1_ratio: {type: float, default: 0.1}
+    command: "python train.py {alpha} {l1_ratio}"
+  validate:
+    parameters:
+      filepath: path
+    command: "python validate.py {filepath}"
