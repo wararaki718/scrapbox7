@@ -16,6 +16,14 @@ kotlinc basic.kt
 kotlinc collections.kt
 ```
 
+```shell
+kotlinc controlCondition.kt
+```
+
+```shell
+kotlinc controlLoop.kt
+```
+
 ## run
 
 ```shell
@@ -28,4 +36,12 @@ kotlin BasicKt
 
 ```shell
 kotlin CollectionsKt
+```
+
+```shell
+kotlin ControlConditionKt
+```
+
+```shell
+kotlin ControlLoopKt
 ```
