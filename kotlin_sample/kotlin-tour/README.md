@@ -36,6 +36,10 @@ kotlinc functionsLambda.kt
 kotlinc classes.kt
 ```
 
+```shell
+kotlinc nullSafety.kt
+```
+
 ## run
 
 ```shell
@@ -68,4 +72,8 @@ kotlin FunctionsLambdaKt
 
 ```shell
 kotlin ClassesKt
+```
+
+```shell
+kotlin NullSafetyKt
 ```
