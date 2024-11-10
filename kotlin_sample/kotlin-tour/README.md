@@ -32,6 +32,10 @@ kotlinc functions.kt
 kotlinc functionsLambda.kt
 ```
 
+```shell
+kotlinc classes.kt
+```
+
 ## run
 
 ```shell
@@ -60,4 +64,8 @@ kotlin FunctionsKt
 
 ```shell
 kotlin FunctionsLambdaKt
+```
+
+```shell
+kotlin ClassesKt
 ```
