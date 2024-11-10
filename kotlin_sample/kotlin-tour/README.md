@@ -24,6 +24,14 @@ kotlinc controlCondition.kt
 kotlinc controlLoop.kt
 ```
 
+```shell
+kotlinc functions.kt
+```
+
+```shell
+kotlinc functionsLambda.kt
+```
+
 ## run
 
 ```shell
@@ -44,4 +52,12 @@ kotlin ControlConditionKt
 
 ```shell
 kotlin ControlLoopKt
+```
+
+```shell
+kotlin FunctionsKt
+```
+
+```shell
+kotlin FunctionsLambdaKt
 ```
