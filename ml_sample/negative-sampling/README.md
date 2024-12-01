@@ -1,4 +1,4 @@
-# in-batch negative sampling
+# negative sampling
 
 ## setup
 
