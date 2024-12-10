@@ -1,4 +1,4 @@
-# unified embedding model (DistilMarginMSELoss)
+# unified embedding model (infoNCE loss)
 
 ## setup
 
