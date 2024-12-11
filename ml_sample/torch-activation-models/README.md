@@ -1,4 +1,4 @@
-# softmax & sigmoid
+# various activation functions
 
 ## setup
 
