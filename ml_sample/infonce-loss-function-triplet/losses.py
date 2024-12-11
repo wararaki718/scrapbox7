@@ -4,8 +4,8 @@ import torch
 import torch.nn as nn
 
 
-def calc_similarity(x: torch.Tensor, y: torch.Tensor):
-    return (1.0 - nn.functional.cosine_similarity(x, y))
+def calc_similarity(x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+    return nn.functional.cosine_similarity(x, y)
 
 
 class InfoNCELoss(nn.Module):

@@ -14,8 +14,7 @@ def main() -> None:
     query_encoder = QueryEncoder(query_input_size)
     document_encoder = DocumentEncoder(document_input_size)
 
-    # criterion = PairwiseNLLLoss()
-    criterion = DistialMarginMSELoss(distance_function=lambda x, y: 1.0 - F.cosine_similarity(x, y))
+    criterion = DistialMarginMSELoss(distance_function=lambda x, y: F.cosine_similarity(x, y))
     
     model = UnifiedEmbeddingModel(query_encoder, document_encoder, criterion)
 
