@@ -5,9 +5,9 @@ from model import NNModel
 
 
 def main() -> None:
-    anchor = torch.rand(1, 10)
-    positive = torch.rand(1, 10)
-    negative = torch.rand(1, 10)
+    anchor = torch.rand(5, 10)
+    positive = torch.rand(5, 10)
+    negative = torch.rand(5, 10)
     print(f"anchor  : {anchor.shape}")
     print(f"positive: {positive.shape}")
     print(f"negative: {negative.shape}")
@@ -18,6 +18,7 @@ def main() -> None:
     custom_triplet_loss = nn.TripletMarginWithDistanceLoss(
         distance_function=nn.functional.cosine_similarity,
         margin=0.1,
+        reduction="sum",
     )
 
     # output embeddings
