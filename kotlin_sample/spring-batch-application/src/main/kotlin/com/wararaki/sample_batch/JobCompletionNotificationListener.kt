@@ -9,17 +9,10 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Component
 
 @Component
-class JobCompletionNotificationListener: JobExecutionListener {
+class JobCompletionNotificationListener(val jdbcTemplate: JdbcTemplate): JobExecutionListener {
     val logger = LoggerFactory.getLogger(JobCompletionNotificationListener::class.java)
 
-    val jdbcTemplate: JdbcTemplate
-
-    constructor(jdbcTemplate: JdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate
-    }
-
     override fun afterJob(jobExecution: JobExecution) {
-        this.logger.info(jobExecution.status.toString())
         if(jobExecution.status == BatchStatus.COMPLETED) {
             this.logger.info("!!! JOB FINISHED! Time to verify the results")
 

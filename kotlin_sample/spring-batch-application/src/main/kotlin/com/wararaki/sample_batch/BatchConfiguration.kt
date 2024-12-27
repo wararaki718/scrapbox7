@@ -11,11 +11,13 @@ import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilde
 import org.springframework.batch.item.file.FlatFileItemReader
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.ClassPathResource
 import org.springframework.jdbc.datasource.DataSourceTransactionManager
 import javax.sql.DataSource
 
-object BatchConfiguration {
+@Configuration
+class BatchConfiguration {
     @Bean
     fun reader(): FlatFileItemReader<Person> {
         return FlatFileItemReaderBuilder<Person>()
