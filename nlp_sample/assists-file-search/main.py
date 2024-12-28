@@ -19,7 +19,7 @@ def main() -> None:
 
     # upload to OpenAI
     download_path = download_pdf()
-    file_streams = [open(download_path, "rb")]
+    file_streams = [open(download_path, "rb"), open(download_path, "rb")]
 
     file_batch = client.beta.vector_stores.file_batches.upload_and_poll(
         vector_store_id=vector_store.id, files=file_streams
@@ -35,7 +35,7 @@ def main() -> None:
 
     # Upload the user provided file to OpenAI
     message_file = client.files.create(file=open(download_path, "rb"), purpose="assistants")
-    messages=[{
+    messages = [{
         "role": "user",
         "content": "How many shares of AAPL were outstanding at the end of of October 2023?",
         # Attach the new file to the message.
