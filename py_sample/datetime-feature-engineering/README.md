@@ -3,7 +3,7 @@
 ## setup
 
 ```shell
-pip install numpy
+pip install numpy pandas
 ```
 
 ## run
