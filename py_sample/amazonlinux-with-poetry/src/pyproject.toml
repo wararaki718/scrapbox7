@@ -1,6 +1,6 @@
 [project]
 name = "batch"
-version = "0.1.0"
+version = "1.0.0"
 description = ""
 authors = [
     {name = "wararaki",email = "ky7.ott.w@gmail.com"}
@@ -8,17 +8,24 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "numpy (>=2.2.1,<3.0.0)",
 ]
+package-mode = false
 
 [tool.poetry.dependencies]
 torch = [
     { platform = "darwin", version = "^2.5.0", source = "pypi" },
-    { platform = "linux", version = "v2.5.0", source = "pypi", markers = "platform_machine == 'arm64'" },
-    { platform = "linux", version = "v2.5.0", source = "torch-cpu", markers = "platform_machine == 'x86_64'"},
+    { platform = "linux", version = "^2.5.0", source = "pypi", markers = "platform_machine == 'arm64'" },
+    { platform = "linux", version = "^2.5.0", source = "torch-cpu", markers = "platform_machine == 'x86_64'"},
 ]
 
+[[tool.poetry.source]]
+name = "torch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
+
 [tool.poetry.scripts]
-batch-runner = "app.batch.main:main"
+batch-runner = "batch.main:main"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
