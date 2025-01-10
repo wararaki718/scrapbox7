@@ -1,0 +1,4 @@
+services:
+  batch:
+    build: .
+    image: linux-torch-batch:latest
