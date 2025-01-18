@@ -1,5 +1,7 @@
 # sample litgpt
 
+https://github.com/Lightning-AI/litgpt
+
 ## setup
 
 ```shell
