@@ -7,6 +7,13 @@ class User(DataFrameModel):
     age: int
 
 
+class CustomUser(DataFrameModel):
+    user_id: int
+    name: str
+    age: int
+    custom: str
+
+
 class Item(DataFrameModel):
     item_id: int
     name: str

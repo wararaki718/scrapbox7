@@ -1,7 +1,9 @@
+from typing import cast
+
 import numpy as np
 from pandera.typing import DataFrame, Series
 
-from app.schema import User
+from app.schema import CustomUser, User
 
 
 class UserAgeProcessor:
@@ -24,3 +26,15 @@ class UserProcessor:
         # ok
         ages = self._age_processor.transform(user_df.age)
         return user_df, ages
+
+
+class CustomUserProcessor:
+    def transform(self, user_df: DataFrame[User]) -> DataFrame[CustomUser]:
+        customs = ["custom" for _ in range(len(user_df))]
+        custom_df = user_df.assign(custom=customs)
+
+        # error pyright
+        # return custom_df
+
+        # ok
+        return cast(DataFrame[CustomUser], custom_df)
