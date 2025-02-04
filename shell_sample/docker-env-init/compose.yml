@@ -1,0 +1,6 @@
+services:
+  app:
+    build: .
+    image: sample-batch:latest
+    environment:
+      - SAMPLE_ENV_VALUE=${SAMPLE_ENV_VALUE:-default_value}
