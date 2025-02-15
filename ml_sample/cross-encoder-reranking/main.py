@@ -36,8 +36,8 @@ def main() -> None:
     bge_corpus_ids = [hit['corpus_id'] for hit in hits]
     print()
 
-    for i in range(1, top_k+1):
-        print(f"Top {i} passage. Bi-encoder {retrieval_corpus_ids[i]}, Cross-encoder BGE {bge_corpus_ids[i]}")
+    for i in range(top_k):
+        print(f"Top {i+1} passage. Bi-encoder {retrieval_corpus_ids[i]}, Cross-encoder BGE {bge_corpus_ids[i]}")
     print("DONE")
 
 
