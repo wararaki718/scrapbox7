@@ -1,26 +1,36 @@
 import numpy as np
-from sklearn.metrics import brier_score_loss
+from sklearn.calibration import CalibratedClassifierCV
+from sklearn.naive_bayes import GaussianNB
+
+from data import get_data
+from evaluate import evaluate
 
 
 def main() -> None:
-    # labels
-    y_true = np.array([0, 1, 1, 0])
-    y_true_categorical = np.array(["spam", "ham", "ham", "spam"])
+    print("calibration metrics: brier score (smaller is better)")
+    X_train, X_test, y_train, y_test, w_train, w_test = get_data()
+    print(X_train.shape, y_train.shape, w_train.shape)
+    print(X_test.shape, y_test.shape, w_test.shape)
+    print()
 
-    # probalities
-    y_prob = np.array([0.1, 0.9, 0.8, 0.4])
+    # no calibration
+    model = GaussianNB()
+    model.fit(X_train, y_train)
+    score = evaluate(model, X_test, y_test, w_test)
+    print(f"No calibration: {score:.4f}")
 
-    # regression
-    score = brier_score_loss(y_true, y_prob)
-    print(f"Brier Score: {score} (regression)")
+    # isotonic calibration
+    model = CalibratedClassifierCV(GaussianNB(), method="isotonic", cv=2)
+    model.fit(X_train, y_train, sample_weight=w_train)
+    score = evaluate(model, X_test, y_test, w_test)
+    print(f"Isotonic calibration: {score:.4f}")
 
-    # classifier
-    score = brier_score_loss(y_true, 1.0 - y_prob, pos_label=0)
-    print(f"Brier Score: {score} (classifier)")
-
-    # classifier
-    score = brier_score_loss(y_true_categorical, y_prob, pos_label="ham")
-    print(f"Brier Score: {score} (classifier categorical)")
+    # sigmoid calibration
+    model = CalibratedClassifierCV(GaussianNB(), method="sigmoid", cv=2)
+    model.fit(X_train, y_train, sample_weight=w_train)
+    score = evaluate(model, X_test, y_test, w_test)
+    print(f"Sigmoid calibration: {score:.4f}")
+    print()
 
     print("DONE")
 
