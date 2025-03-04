@@ -7,7 +7,7 @@ from evaluate import evaluate
 
 
 def main() -> None:
-    print("calibration metrics: brier score (smaller is better)")
+    print("calibration metrics:")
     X_train, X_test, y_train, y_test, w_train, w_test = get_data()
     print(X_train.shape, y_train.shape, w_train.shape)
     print(X_test.shape, y_test.shape, w_test.shape)
@@ -16,20 +16,34 @@ def main() -> None:
     # no calibration
     model = GaussianNB()
     model.fit(X_train, y_train)
-    score = evaluate(model, X_test, y_test, w_test)
-    print(f"No calibration: {score:.4f}")
+    score, skill_score, ece_score, mce_score = evaluate(model, X_test, y_test, w_test)
+    print("# No calibration")
+    print(f"- brier_score      : {score:.4f}")
+    print(f"- brier_skill_score: {skill_score:.4f}")
+    print(f"- ece_score        : {ece_score:.4f}")
+    print(f"- mce_score        : {mce_score:.4f}")
+    print()
 
     # isotonic calibration
     model = CalibratedClassifierCV(GaussianNB(), method="isotonic", cv=2)
     model.fit(X_train, y_train, sample_weight=w_train)
-    score = evaluate(model, X_test, y_test, w_test)
-    print(f"Isotonic calibration: {score:.4f}")
+    score, skill_score, ece_score, mce_score = evaluate(model, X_test, y_test, w_test)
+    print("# Isotonic calibration")
+    print(f"- brier_score      : {score:.4f}")
+    print(f"- brier_skill_score: {skill_score:.4f}")
+    print(f"- ece_score        : {ece_score:.4f}")
+    print(f"- mce_score        : {mce_score:.4f}")
+    print()
 
     # sigmoid calibration
     model = CalibratedClassifierCV(GaussianNB(), method="sigmoid", cv=2)
     model.fit(X_train, y_train, sample_weight=w_train)
-    score = evaluate(model, X_test, y_test, w_test)
-    print(f"Sigmoid calibration: {score:.4f}")
+    score, skill_score, ece_score, mce_score = evaluate(model, X_test, y_test, w_test)
+    print("# Sigmoid calibration")
+    print(f"- brier_score      : {score:.4f}")
+    print(f"- brier_skill_score: {skill_score:.4f}")
+    print(f"- ece_score        : {ece_score:.4f}")
+    print(f"- mce_score        : {mce_score:.4f}")
     print()
 
     print("DONE")
