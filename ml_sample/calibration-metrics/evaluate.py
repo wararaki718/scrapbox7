@@ -3,7 +3,12 @@ from sklearn.calibration import CalibratedClassifierCV
 from sklearn.metrics import brier_score_loss
 from sklearn.naive_bayes import GaussianNB
 
-from metrics import brier_skill_score, expected_calibration_error, maximum_calibration_error
+from metrics import (
+    brier_skill_score,
+    expected_calibration_error,
+    maximum_calibration_error,
+    stratified_brier_score,
+)
 
 
 def evaluate(
@@ -26,4 +31,7 @@ def evaluate(
     # smaller is better
     mce_score = maximum_calibration_error(y_test, y_prob)
 
-    return score, skill_score, ece_score, mce_score
+    # smaller is better
+    positive_score, negative_score = stratified_brier_score(y_test, y_prob)
+
+    return score, skill_score, ece_score, mce_score, positive_score, negative_score

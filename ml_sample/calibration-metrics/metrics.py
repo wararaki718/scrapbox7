@@ -43,3 +43,10 @@ def expected_calibration_error(y_true: np.ndarray, y_prob: np.ndarray, n_bins: i
 def maximum_calibration_error(y_true: np.ndarray, y_prob: np.ndarray, n_bins: int=10, method: str="uniform") -> float:
     x, y, _ = _calib_curve_probs(y_true, y_prob, n_bins, method)
     return np.abs(x - y).max()
+
+
+# binary classifier only
+def stratified_brier_score(y_true: np.ndarray, y_prob: np.ndarray) -> tuple[float, float]:
+    positive_score = ((y_prob[y_true == 1] - 1)**2).mean()
+    negative_score = (y_prob[y_true == 0]**2).mean()
+    return positive_score, negative_score
