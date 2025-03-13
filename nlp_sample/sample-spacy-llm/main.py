@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from spacy_llm.util import assemble
+from spacy.tokens.doc import Doc
 
 
 def main() -> None:
@@ -9,17 +10,21 @@ def main() -> None:
     print("model loaded!")
     print()
 
-    text = "Jack and Jill rode up the hill in Les Deux Alpes"
+    #text = "Jack and Jill rode up the hill in Les Deux Alpes"
+    text = "Matthew and Maria went to Japan to visit the Nintendo headquarters"
     print(f"sample: {text}")
     print()
 
     doc = nlp(text)
-    print("entity")
-    print([(ent.text, ent.label_) for ent in doc.ents])
+    print(doc)
+    print(type(doc))
     print()
 
-    print("cats")
-    print(doc.cats)
+    print(doc.vocab)
+    print()
+
+    print("entity")
+    print([(ent.text, ent.label_) for ent in doc.ents])
     print()
 
     print("DONE")
