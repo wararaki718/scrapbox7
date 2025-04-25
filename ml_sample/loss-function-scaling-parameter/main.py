@@ -1,6 +1,6 @@
 import numpy as np
 
-from loss import sigmoid, cosine_similarity, loss_engagement, loss_relevance
+from loss import sigmoid, cosine_similarity, loss_engagement, loss_relevance, softmax
 
 
 def main() -> None:
@@ -19,6 +19,16 @@ def main() -> None:
 
     loss = loss_relevance(x_q, x_d)
     print(f"Loss: {loss}")
+    print()
+
+    softmax_result = softmax(x_q, x_d, scale=1.0)
+    print(f"Softmax result(scale=1)   : {softmax_result.flatten()}")
+
+    softmax_result = softmax(x_q, x_d, scale=0.01)
+    print(f"Softmax result(scale=0.01): {softmax_result.flatten()}")
+
+    softmax_result = softmax(x_q, x_d, scale=50.0)
+    print(f"Softmax result(scale=50)  : {softmax_result.flatten()}")
 
     print("DONE")
 

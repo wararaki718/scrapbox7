@@ -41,3 +41,9 @@ def loss_relevance(x_q: np.ndarray, x_d: np.ndarray, scale: float=20.0) -> float
     
     # return loss
     return np.mean(loss)
+
+
+def softmax(x_q: np.ndarray, x_d: np.ndarray, scale: float=20.0) -> np.ndarray:
+    x = sigmoid(cosine_similarity(x_q, x_d))
+    e_x = np.exp(scale * x)
+    return e_x / np.sum(e_x, axis=0)
