@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 
 from loss import sigmoid, cosine_similarity, loss_engagement, loss_relevance, softmax
 
@@ -29,6 +30,18 @@ def main() -> None:
 
     softmax_result = softmax(x_q, x_d, scale=50.0)
     print(f"Softmax result(scale=50)  : {softmax_result.flatten()}")
+    print()
+
+    similarities = torch.Tensor(sigmoid(cosine_similarity(x_q, x_d)))
+    softmax_result: torch.Tensor = torch.softmax(similarities, dim=0)
+    print(f"torch.softmax result(scale=1)   : {softmax_result.flatten()}")
+
+    softmax_result: torch.Tensor = torch.softmax(0.01 * similarities, dim=0)
+    print(f"torch.softmax result(scale=0.01): {softmax_result.flatten()}")
+
+    softmax_result: torch.Tensor = torch.softmax(50.0 * similarities, dim=0)
+    print(f"torch.softmax result(scale=50)  : {softmax_result.flatten()}")
+    print()
 
     print("DONE")
 
