@@ -1,6 +1,7 @@
 from config import DocumentTowerConfig, QueryTowerConfig
 from model.tower import TwoTowerModel
 from model.modality import Modalities, MultiModalDataset
+from train import Trainer
 from utils import get_data
 
 
@@ -22,7 +23,7 @@ def main() -> None:
         n_context=document_tower_config.context_input_dim,
         n_image=document_tower_config.image_input_dim,
         n_text=document_tower_config.text_input_dim,
-        n_actions=document_tower_config.action_input_dim,
+        n_action=document_tower_config.action_input_dim,
     )
     document_modalities = Modalities(
         X_context=X_document_context,
@@ -43,7 +44,7 @@ def main() -> None:
         n_context=query_tower_config.context_input_dim,
         n_image=query_tower_config.image_input_dim,
         n_text=query_tower_config.text_input_dim,
-        n_actions=query_tower_config.action_input_dim,
+        n_action=query_tower_config.action_input_dim,
     )
     query_modalities = Modalities(
         X_context=X_query_context,
@@ -64,6 +65,16 @@ def main() -> None:
     # define model
     model = TwoTowerModel(document_tower_config, query_tower_config)
     print("model defined")
+
+    # train
+    trainer = Trainer()
+    trainer.train(
+        model=model,
+        dataset=dataset,
+        n_epochs=2,
+        batch_size=128,
+    )
+    print("model trained")
     
     print("DONE")
 

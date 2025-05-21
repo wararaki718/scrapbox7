@@ -1,13 +1,13 @@
+from dataclasses import dataclass
 from typing import TypeAlias
 
 import torch
-from pydantic import BaseModel
 from torch.utils.data import Dataset
 
 ModalitiesType: TypeAlias = tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]
 
-
-class Modalities(BaseModel):
+@dataclass
+class Modalities:
     X_context: torch.Tensor
     X_image: torch.Tensor
     X_text: torch.Tensor
