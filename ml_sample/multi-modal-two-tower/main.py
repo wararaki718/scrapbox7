@@ -1,6 +1,6 @@
 from config import DocumentTowerConfig, QueryTowerConfig
 from model.tower import TwoTowerModel
-from model.modality import Modalities, MultiModalDataset
+from model.dataset import Modalities, MultiModalDataset
 from train import Trainer
 from utils import get_data
 

@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import  DataLoader
 
-from model.modality import MultiModalDataset
+from model.dataset import MultiModalDataset
 
 
 class Trainer:
