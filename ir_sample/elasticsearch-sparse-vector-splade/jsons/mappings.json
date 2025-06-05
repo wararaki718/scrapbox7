@@ -1,0 +1,19 @@
+{
+    "mappings": {
+        "properties": {
+            "text": {
+                "type": "text",
+                "analyzer": "standard"
+            },
+            "impact": {
+                "type": "sparse_vector"
+            },
+            "positive": {
+                "type": "sparse_vector"
+            },
+            "negative": {
+                "type": "sparse_vector"
+            }
+        }
+    }
+}
