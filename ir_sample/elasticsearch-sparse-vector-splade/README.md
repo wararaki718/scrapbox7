@@ -1,9 +1,9 @@
-# sparse vector
+# elasticsearch with splade
 
 ## setup
 
 ```shell
-pip install elasticsearch
+pip install elasticsearch torch transformers
 ```
 
 ## launch
