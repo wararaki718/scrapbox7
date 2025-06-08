@@ -1,4 +1,3 @@
-import numpy as np
 from torch.utils.data import DataLoader
 
 from dataset import create_dataset, collate_batch
@@ -27,11 +26,12 @@ def main() -> None:
 
     # train
     trainer = Trainer()
-    model = trainer.train(model, dataloader, n_epochs=10)
+    model: CBOWModel = trainer.train(model, dataloader, n_epochs=10)
     print("Training completed.")
 
     # evaluate
-    embeddings: np.ndarray =model.embeddings.weight.data.cpu().numpy()
+    # embeddings: np.ndarray =model.embeddings.weight.data.cpu().numpy()
+    embeddings = model.get_embeddings()
     find_similar_words("dog", embeddings, word2index=word2index, index2word=index2word)
     find_similar_words("fox", embeddings, word2index=word2index, index2word=index2word)
 

@@ -1,10 +1,9 @@
-import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
+import torch
 
 
 def find_similar_words(
     word: str,
-    embeddings: np.ndarray,
+    embeddings: torch.Tensor,
     word2index: dict[str, int],
     index2word: dict[int, str],
     top_n: int=5,
@@ -16,11 +15,10 @@ def find_similar_words(
     word_index = word2index[word]
     word_vector = embeddings[word_index].reshape(1, -1)
 
-    similarities = cosine_similarity(word_vector, embeddings)[0]
-    # 自分自身を除外
-    similarities[word_index] = -1 # 最も低い値に設定
+    similarities = torch.nn.functional.cosine_similarity(word_vector, embeddings, dim=1)
+    similarities[word_index] = -2
 
-    most_similar_indices = np.argsort(similarities)[::-1][:top_n]
+    most_similar_indices = torch.topk(similarities, k=top_n).indices
     print(f"Words most similar to '{word}':")
-    for idx in most_similar_indices:
-        print(f"- {index2word[idx]} (Similarity: {similarities[idx]:.4f})")
+    for index in most_similar_indices:
+        print(f"- {index2word[index.item()]} (Similarity: {similarities[index.item()]:.4f})")

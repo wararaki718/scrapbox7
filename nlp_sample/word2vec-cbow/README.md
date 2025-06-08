@@ -1,4 +1,4 @@
-# word2vec
+# cbow word2vec
 
 ## setup
 

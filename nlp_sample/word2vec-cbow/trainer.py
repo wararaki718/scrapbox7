@@ -8,17 +8,12 @@ class Trainer:
         self._device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def train(self, model: nn.Module, dataloader: DataLoader, n_epochs: int=100) -> nn.Module:
-        # オプティマイザ
         optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
-
-        # 損失関数
-        # NLLLossは、LogSoftmaxの出力に対して使用
         criterion = nn.NLLLoss()
 
-        # デバイスの設定
         model.to(self._device)
 
-        # 学習ループ
+        model.train()
         for epoch in range(1, n_epochs+1):
             total_loss = 0.0
             for context_words_batch, target_words_batch in dataloader:
