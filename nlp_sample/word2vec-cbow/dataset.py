@@ -17,14 +17,14 @@ class CBOWDataset(Dataset):
 def create_dataset(words: list[str], word2index: dict[str, int], window_size: int=2) -> CBOWDataset:
     cbow_pairs = []
     for i, target_word in enumerate(words):
-        target_idx = word2index[target_word]
+        target_index = word2index[target_word]
         context_indices: list[int] = []
         for j in range(max(0, i - window_size), min(len(words), i + window_size + 1)):
             if i != j:
                 context_indices.append(word2index[words[j]])
         
         if context_indices: # コンテキスト単語が存在する場合のみ追加
-            cbow_pairs.append((context_indices, target_idx))
+            cbow_pairs.append((context_indices, target_index))
 
     dataset = CBOWDataset(cbow_pairs)
     return dataset
