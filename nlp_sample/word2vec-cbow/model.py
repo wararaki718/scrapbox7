@@ -24,3 +24,17 @@ class CBOWModel(nn.Module):
         with torch.no_grad():
             embeddings: torch.Tensor = self._embeddings.weight.cpu().detach()
         return embeddings
+
+
+def collate_batch(batch: tuple[torch.Tensor, torch.Tensor]) -> tuple[torch.Tensor, torch.Tensor]:
+    context_list, target_list = [], []
+    max_len = 0
+    for context, target in batch:
+        max_len = max(max_len, len(context))
+
+    for context, target in batch:
+        padded_context = torch.cat([context, torch.zeros(max_len - len(context), dtype=torch.long)])
+        context_list.append(padded_context)
+        target_list.append(target)
+
+    return torch.stack(context_list), torch.stack(target_list)

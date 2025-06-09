@@ -1,39 +1,53 @@
 from torch.utils.data import DataLoader
 
-from dataset import create_dataset, collate_batch
-from evaluate import find_similar_words
-from model import CBOWModel
-from text import preprocess_text
+from dataset import create_dataset
+from evaluate import Evaluator
+from model import CBOWModel, collate_batch
+from text import TextPreprocessor, VocabularyGenerator
 from trainer import Trainer
+from utils import get_texts, show
 
 
 def main() -> None:
-    # サンプルテキスト
-    text = "The quick brown fox jumps over the lazy dog. The dog barks."
-    print(f"Original Text: {text}")
+    # dataset
+    texts = get_texts()
+    print(f"Original Text: {len(texts)} documents")
 
-    words, word2index, index2word = preprocess_text(text, threshold=1)
-    print(f"Word to Index: {word2index}")
-    print(f"Index to Word: {index2word}")
+    # preprocess
+    preprocessor = TextPreprocessor()
+    documents = preprocessor.transform(texts)
+    print(f"Processed Documents: {len(documents)} documents")
 
-    dataset = create_dataset(words, word2index, window_size=2)
+    generator = VocabularyGenerator()
+    vocabularies = generator.generate(documents, threshold=1)
+    print(f"Vocabularies: {len(vocabularies)} words")
+
+    dataset = create_dataset(documents, vocabularies, window_size=2)
     dataloader = DataLoader(dataset, batch_size=32, shuffle=True, collate_fn=collate_batch)
     print(f"Dataset Size: {len(dataset)}")
 
     # model
     embedding_dim = 100
-    model = CBOWModel(len(word2index), embedding_dim)
+    model = CBOWModel(len(vocabularies), embedding_dim)
+    print(f"Model: CBOW with {len(vocabularies)} words and embedding dimension {embedding_dim}")
+    print()
 
     # train
     trainer = Trainer()
     model: CBOWModel = trainer.train(model, dataloader, n_epochs=10)
     print("Training completed.")
+    print()
 
     # evaluate
-    # embeddings: np.ndarray =model.embeddings.weight.data.cpu().numpy()
-    embeddings = model.get_embeddings()
-    find_similar_words("dog", embeddings, word2index=word2index, index2word=index2word)
-    find_similar_words("fox", embeddings, word2index=word2index, index2word=index2word)
+    evaluator = Evaluator(model.get_embeddings(), word2index=vocabularies)
+    
+    print(f"Words most similar to 'dog':")
+    results = evaluator.find_similar_words("dog")
+    show(results)
+
+    print(f"Words most similar to 'fox':")
+    results = evaluator.find_similar_words("fox")
+    show(results)
 
     print("DONE")
 

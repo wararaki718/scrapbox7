@@ -1,24 +1,29 @@
 import torch
 
 
-def find_similar_words(
-    word: str,
-    embeddings: torch.Tensor,
-    word2index: dict[str, int],
-    index2word: dict[int, str],
-    top_n: int=5,
-) -> None:
-    if word not in word2index:
-        print(f"'{word}' not in vocabulary.")
-        return
+class Evaluator:
+    def __init__(self, embeddings: torch.Tensor, word2index: dict[str, int]) -> None:
+        self._embeddings = embeddings
+        self._word2index = word2index
+        self._index2word = {index: word for word, index in word2index.items()}
 
-    word_index = word2index[word]
-    word_vector = embeddings[word_index].reshape(1, -1)
+    def find_similar_words(
+        self,
+        word: str,
+        top_n: int=5,
+    ) -> None:
+        word_index = self._word2index.get(word)
+        if word_index is None:
+            print(f"'{word}' not found in vocabulary.", flush=True)
+            return
 
-    similarities = torch.nn.functional.cosine_similarity(word_vector, embeddings, dim=1)
-    similarities[word_index] = -2
+        word_vector = self._embeddings[word_index].reshape(1, -1)
+        similarities = torch.nn.functional.cosine_similarity(word_vector, self._embeddings, dim=1)
+        similarities[word_index] = -2
 
-    most_similar_indices = torch.topk(similarities, k=top_n).indices
-    print(f"Words most similar to '{word}':")
-    for index in most_similar_indices:
-        print(f"- {index2word[index.item()]} (Similarity: {similarities[index.item()]:.4f})")
+        most_similar_indices = torch.topk(similarities, k=top_n).indices.tolist()
+
+        results = [
+            (self._index2word[index], similarities[index]) for index in most_similar_indices
+        ]
+        return results
