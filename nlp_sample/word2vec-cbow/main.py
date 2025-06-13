@@ -1,21 +1,24 @@
+from pathlib import Path
+
+import torch
 from torch.utils.data import DataLoader
 
 from dataset import create_dataset
 from evaluate import Evaluator
 from model import CBOWModel, collate_batch
-from text import TextPreprocessor, VocabularyGenerator
+from text import TextProcessor, VocabularyGenerator
 from trainer import Trainer
-from utils import get_texts, show
+from utils import get_wikipedia, show
 
 
 def main() -> None:
     # dataset
-    texts = get_texts()
-    print(f"Original Text: {len(texts)} documents")
+    dataset = get_wikipedia()
+    print(f"Original Text: {len(dataset)} documents")
 
     # preprocess
-    preprocessor = TextPreprocessor()
-    documents = preprocessor.transform(texts)
+    preprocessor = TextProcessor()
+    documents = preprocessor.transform(dataset["text"])
     print(f"Processed Documents: {len(documents)} documents")
 
     generator = VocabularyGenerator()
@@ -23,11 +26,11 @@ def main() -> None:
     print(f"Vocabularies: {len(vocabularies)} words")
 
     dataset = create_dataset(documents, vocabularies, window_size=2)
-    dataloader = DataLoader(dataset, batch_size=32, shuffle=True, collate_fn=collate_batch)
+    dataloader = DataLoader(dataset, batch_size=128, shuffle=True, collate_fn=collate_batch)
     print(f"Dataset Size: {len(dataset)}")
 
     # model
-    embedding_dim = 100
+    embedding_dim = 256
     model = CBOWModel(len(vocabularies), embedding_dim)
     print(f"Model: CBOW with {len(vocabularies)} words and embedding dimension {embedding_dim}")
     print()
@@ -36,6 +39,12 @@ def main() -> None:
     trainer = Trainer()
     model: CBOWModel = trainer.train(model, dataloader, n_epochs=10)
     print("Training completed.")
+    print()
+
+    # save model
+    model_path = Path("./model/cbow_model.pth")
+    torch.save(model.cpu().state_dict(), model_path)
+    print(f"Model saved to {model_path}")
     print()
 
     # evaluate

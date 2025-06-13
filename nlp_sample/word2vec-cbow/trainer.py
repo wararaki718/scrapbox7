@@ -22,10 +22,8 @@ class Trainer:
 
                 optimizer.zero_grad()
 
-                # モデルのフォワードパス
                 log_probs = model(context_words_batch)
 
-                # 損失の計算
                 loss: torch.Tensor = criterion(log_probs, target_words_batch)
                 loss.backward()
                 optimizer.step()
