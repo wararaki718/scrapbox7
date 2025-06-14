@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 from dataset import create_dataset
 from evaluate import Evaluator
 from model import CBOWModel, collate_batch
-from text import TextProcessor, VocabularyGenerator
+from text import TextProcessor, TextChunkLoader, TextChunkProcessor, VocabularyGenerator
 from trainer import Trainer
 from utils import get_wikipedia, show
 
@@ -17,9 +17,19 @@ def main() -> None:
     print(f"Original Text: {len(dataset)} documents")
 
     # preprocess
-    preprocessor = TextProcessor()
-    documents = preprocessor.transform(dataset["text"])
-    print(f"Processed Documents: {len(documents)} documents")
+    # processor = TextProcessor()
+    # documents = processor.transform(dataset["text"])
+    # print(f"Processed Documents: {len(documents)} documents")
+    processor = TextChunkProcessor()
+    store_dir = Path("./data")
+    store_dir.mkdir(exist_ok=True)
+    processor.transform(dataset["text"], store_dir=store_dir, chunksize=20000)
+    print(f"Processed Documents: stored in '{store_dir}'")
+
+    loader = TextChunkLoader(store_dir=store_dir)
+    documents = loader.load()
+    print(f"Loaded Documents: {len(documents)} documents")
+    print()
 
     generator = VocabularyGenerator()
     vocabularies = generator.generate(documents, threshold=1)

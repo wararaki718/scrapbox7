@@ -1,4 +1,6 @@
+import pickle
 from collections import Counter
+from pathlib import Path
 
 from fugashi import Tagger
 from tqdm import tqdm
@@ -32,6 +34,7 @@ class Tokenizer:
         return tokens
 
 
+# in-memory processsing
 class TextProcessor:
     def __init__(self, stop_words: list[str] | None = None) -> None:
         self._tokenizer = Tokenizer(stop_words)
@@ -50,4 +53,47 @@ class TextProcessor:
                 tokens = self._tokenizer.tokenize(sentence)
                 if tokens:
                     documents.append(Document(tokens))
+        return documents
+
+
+class TextChunkProcessor:
+    def __init__(self, stop_words: list[str] | None = None) -> None:
+        self._tokenizer = Tokenizer(stop_words)
+
+    def transform(self, texts: list[str], store_dir: Path = Path("./data"), chunksize: int=1024) -> None:
+        documents = []
+        index = 1
+
+        for text in tqdm(texts):
+            text = text.replace("。", "\n")
+            sentences = text.split("\n")
+
+            for sentence in sentences:
+                sentence = sentence.strip()
+                if sentence == "":
+                    continue
+
+                tokens = self._tokenizer.tokenize(sentence)
+                if tokens:
+                    documents.append(Document(tokens))
+
+            if len(documents) >= chunksize:
+                store_path = store_dir / f"documents_{index:06d}.pkl"
+                with open(store_path, "wb") as f:
+                    pickle.dump(documents, f)
+                print(f"Stored {len(documents)} documents to '{store_path}'", flush=True)
+                documents = []
+                index += 1
+
+
+class TextChunkLoader:
+    def __init__(self, store_dir: Path = Path("./data")) -> None:
+        self._store_dir = store_dir
+
+    def load(self) -> list[Document]:
+        documents = []
+        for file in sorted(self._store_dir.glob("documents_*.pkl")):
+            with open(file, "rb") as f:
+                chunk = pickle.load(f)
+                documents.extend(chunk)
         return documents
