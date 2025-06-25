@@ -2,6 +2,7 @@ import numpy as np
 from datasets import Dataset
 from sentence_transformers import SentenceTransformer
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics.pairwise import cosine_similarity
 from tqdm import tqdm
 from transformers import pipeline
 from transformers.pipelines.pt_utils import KeyDataset
@@ -41,4 +42,18 @@ class EmbeddingBaseClassifier:
     def estimate(self, testdata: Dataset) -> np.ndarray:
         embeddings = self._model.encode(testdata["text"], show_progress_bar=True)
         y_preds = self._classifer.predict(embeddings)
+        return y_preds
+
+
+class ZeroShotClassifier:
+    def __init__(self, model_path: str = "sentence-transformers/all-mpnet-base-v2") -> None:
+        self._model = SentenceTransformer(model_path)
+    
+    def estimate(self, testdata: Dataset) -> np.ndarray:
+        embeddings = self._model.encode(testdata["text"], show_progress_bar=True)
+        label_embeddings = self._model.encode(
+            ["A negative review", "A positive review"], show_progress_bar=True
+        )
+        y_preds = cosine_similarity(embeddings, label_embeddings)
+        y_preds = np.argmax(y_preds, axis=1)
         return y_preds

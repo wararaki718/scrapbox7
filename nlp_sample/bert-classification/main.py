@@ -1,6 +1,6 @@
 from datasets import load_dataset
 
-from classifier import TaskBaseClassifier, EmbeddingBaseClassifier
+from classifier import TaskBaseClassifier, EmbeddingBaseClassifier, ZeroShotClassifier
 from evaluation import evaluate
 
 def main() -> None:
@@ -26,6 +26,17 @@ def main() -> None:
     print("model loaded!\n")
 
     model.train(data["train"])
+    y_preds = model.estimate(data["test"])
+    performance = evaluate(data["test"]["label"], y_preds)
+    print(performance)
+    print()
+    del model
+
+    print("### zero-shot classification ###")
+    model_path = "sentence-transformers/all-mpnet-base-v2"
+    model = ZeroShotClassifier(model_path)
+    print("model loaded!\n")
+
     y_preds = model.estimate(data["test"])
     performance = evaluate(data["test"]["label"], y_preds)
     print(performance)
