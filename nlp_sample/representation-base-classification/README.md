@@ -1,4 +1,4 @@
-# bert classification
+# representation based classification
 
 ## setup
 
