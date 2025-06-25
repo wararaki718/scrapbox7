@@ -3,7 +3,7 @@
 ## setup
 
 ```shell
-pip install transformers datasets scikit-learn numpy
+pip install transformers datasets scikit-learn numpy sentence-transformers
 ```
 
 ## run
