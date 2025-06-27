@@ -1,0 +1,5 @@
+Predict whether the following document is a positive or negative movie review:
+
+[DOCUMENT]
+
+If it is positive return 1 and if it is negative return 0. Do not give any other answers.
