@@ -1,0 +1,6 @@
+I have a topic that contains the following documents:
+[DOCUMENTS]
+
+The topic is described by the following keywords: '[KEYWORDS]'.
+
+Based on the documents and keywords, what is this topic about?
