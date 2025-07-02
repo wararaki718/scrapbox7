@@ -8,7 +8,7 @@ def update_topic_model(
     abstracts: list[str],
     prompt: str,
 ) -> BERTopic:
-    generator = pipeline("text2text-generation", model="google/flan-t5-base")
+    generator = pipeline("text2text-generation", model="google/flan-t5-small")
     representation_model = TextGeneration(
         generator,
         prompt=prompt,
