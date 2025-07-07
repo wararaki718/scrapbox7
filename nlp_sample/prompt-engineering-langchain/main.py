@@ -3,6 +3,7 @@ from langchain_community.llms.llamacpp import LlamaCpp
 from chains.single_prompt import chain_single_prompt
 from chains.multi_prompt import chain_multi_prompt
 from chains.memory_prompt import chain_memory_prompt, chain_window_memory_prompt
+from chains.summary_prompt import chain_summary_prompt
 
 
 def main() -> None:
@@ -46,9 +47,20 @@ def main() -> None:
     ]
     responses = chain_window_memory_prompt(texts, llm)
     for i, response in enumerate(responses):
-        print(f"memory prompt {i + 1}: {response}")
+        print(f"window memory prompt {i + 1}: {response}")
         print()
     
+    # summary prompt
+    texts = [
+        "Hi! my name is Maarten. What is 1 + 1?",
+        "What is my name?",
+        "What was the first question I asked?",
+    ]
+    responses = chain_summary_prompt(texts, llm)
+    for i, response in enumerate(responses):
+        print(f"summary prompt {i + 1}: {response}")
+        print()
+
     print("DONE")
 
 
