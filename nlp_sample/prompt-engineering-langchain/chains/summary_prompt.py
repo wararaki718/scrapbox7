@@ -5,7 +5,11 @@ from langchain.memory import ConversationSummaryMemory
 
 
 # template
-TEMPLATE="""<s><|user|>Summarize the conversations and update with the new lines.
+CHAT_HISTORY_TEMPLATE = """<s><|user|>Current conversation:{chat_history}
+{input_prompt}<|end|>
+<|assistant|>"""
+
+SUMMARY_TEMPLATE="""<s><|user|>Summarize the conversations and update with the new lines.
 Current summary:
 {summary}
 new lines of conversation:
@@ -15,17 +19,27 @@ New summary:<|end|>
 
 
 def chain_summary_prompt(texts: list[str], llm: LlamaCpp) -> list[dict]:
-    # define a single prompt
-    prompt = PromptTemplate(
+    # define chat history
+    history_prompt = PromptTemplate(
+        template=CHAT_HISTORY_TEMPLATE,
+        input_variables=["input_prompt", "chat_history"]
+    )
+
+    # summary_template
+    summary_prompt = PromptTemplate(
         input_variables=["new_lines", "summary"],
-        template=TEMPLATE,
+        template=SUMMARY_TEMPLATE,
     )
 
     # chain
-    memory = ConversationSummaryMemory(memory_key="chat_history")
+    memory = ConversationSummaryMemory(
+        llm=llm,
+        memory_key="chat_history",
+        prompt=history_prompt,
+    )
     summary_chain = LLMChain(
         llm=llm,
-        prompt=prompt,
+        prompt=summary_prompt,
         memory=memory,
     )
 
