@@ -6,14 +6,17 @@ from langchain.memory import ConversationSummaryMemory
 
 # template
 TEMPLATE = """<s><|user|>Current conversation:{chat_history}
+
 {input_prompt}<|end|>
 <|assistant|>"""
 
 SUMMARY_TEMPLATE="""<s><|user|>Summarize the conversations and update with the new lines.
 Current summary:
 {summary}
+
 new lines of conversation:
 {new_lines}
+
 New summary:<|end|>
 <|assistant|>"""
 
