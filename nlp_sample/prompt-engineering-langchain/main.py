@@ -2,6 +2,7 @@ from langchain_community.llms.llamacpp import LlamaCpp
 
 from chains.single_prompt import chain_single_prompt
 from chains.multi_prompt import chain_multi_prompt
+from chains.memory_prompt import chain_memory_prompt, chain_window_memory_prompt
 
 
 def main() -> None:
@@ -25,6 +26,28 @@ def main() -> None:
     response = chain_multi_prompt(text, llm)
     print(f"multi prompt: {response}")
     print()
+
+    # memory prompt
+    texts = [
+        "Hi! my name is Maarten. What is 1 + 1?",
+        "What is my name?",
+    ]
+    responses = chain_memory_prompt(texts, llm)
+    for i, response in enumerate(responses):
+        print(f"memory prompt {i + 1}: {response}")
+        print()
+    
+    # window memory prompt
+    texts = [
+        "Hi! my name is Maarten and I am 33 years old. What is 1 + 1?",
+        "What is 3 + 3?",
+        "What is my name?",
+        "What is my age?",
+    ]
+    responses = chain_window_memory_prompt(texts, llm)
+    for i, response in enumerate(responses):
+        print(f"memory prompt {i + 1}: {response}")
+        print()
     
     print("DONE")
 
