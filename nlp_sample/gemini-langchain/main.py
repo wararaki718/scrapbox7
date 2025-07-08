@@ -4,6 +4,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages.ai import AIMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 
+# set environemt variable
 os.environ["GOOGLE_API_KEY"] = os.getenv("GEMINI_API_KEY")
 
 
