@@ -9,7 +9,7 @@ from utils import get_texts
 
 def main() -> None:
     llm = LlamaCpp(
-        model_path="Phi-3-mini-4k-instruct-fp16.gguf",
+        model_path="./model/Phi-3-mini-4k-instruct-fp16.gguf",
         n_gpu_layers=-1,
         max_tokens=500,
         n_ctx=2048,
