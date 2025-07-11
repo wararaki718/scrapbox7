@@ -3,7 +3,7 @@
 ## setup
 
 ```shell
-pip install langchain-community llama-cpp-python
+pip install langchain-community llama-cpp-python faiss-cpu
 ```
 
 ```shell
