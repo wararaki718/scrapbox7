@@ -8,7 +8,7 @@ from data import get_data
 
 def main() -> None:
     # load dataset
-    train_dataset, valid_dataset, scores = get_data()
+    train_dataset, valid_dataset, valid_scores = get_data()
     print(len(train_dataset))
     print()
 
@@ -24,7 +24,7 @@ def main() -> None:
     evaluator = EmbeddingSimilarityEvaluator(
         sentences1=valid_dataset["sentence1"],
         sentences2=valid_dataset["sentence2"],
-        scores=scores,
+        scores=valid_scores,
         main_similarity="cosine",
     )
 
