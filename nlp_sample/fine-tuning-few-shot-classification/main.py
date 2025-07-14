@@ -8,7 +8,7 @@ def main() -> None:
     print(train_data.shape)
     print(test_data.shape)
 
-    model = SetFitModel.from_pretrained("sentence-transformers/all-MiniLM-L6-v2")
+    model = SetFitModel.from_pretrained("sentence-transformers/all-mpnet-base-v2")
     print("model loaded!")
 
     training_args = TrainingArguments(
