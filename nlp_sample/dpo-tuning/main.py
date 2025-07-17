@@ -1,18 +1,15 @@
-from transformers import TrainingArguments, pipeline
-from trl import SFTTrainer
+from transformers import TrainingArguments
+from trl import SFTTrainer, DPOConfig, DPOTrainer
 from peft import AutoPeftModelForCausalLM
 
 from data import get_data
 from model import get_model
-from prompt import FormatPrompt
 from tokenizer import get_tokenizer
-from template import PROMPT_TEMPLATE
 
 
 def main() -> None:
     # load data
-    prompt = FormatPrompt()
-    data = get_data(prompt, n_data=3000)
+    data = get_data()
     print(f"Loaded {len(data)} data samples.")
 
     # load models
@@ -21,27 +18,30 @@ def main() -> None:
     print("model and tokenizer loaded.")
 
     # train
-    training_args = TrainingArguments(
+    training_args = DPOConfig(
         output_dir="./results",
         per_device_train_batch_size=2,
         gradient_accumulation_steps=4,
         optim="paged_adamw_32bit",
-        num_train_epochs=1,
-        learning_rate=2e-4,
+        learning_rate=1e-5,
         logging_steps=10,
+        max_steps=200,
         lr_scheduler_type="cosine",
         fp16=True,
         gradient_checkpointing=True,
         report_to="none",
+        warmup_ratio=0.1,
     )
-    trainer = SFTTrainer(
+    trainer = DPOTrainer(
         model=model,
         train_dataset=data,
         dataset_text_field="text",
         tokenizer=tokenizer,
         args=training_args,
-        max_seq_length=512,
+        max_length=512,
+        beta=0.1,
         peft_config=peft_config,
+        max_prompt_length=512,
     )
     trainer.train()
 
@@ -58,13 +58,7 @@ def main() -> None:
     merged_model = model.merge_and_unload()
     print("Model merged.")
 
-    pipe = pipeline(
-        "text-generation",
-        model=merged_model,
-        tokenizer=tokenizer,
-    )
-    result = pipe(PROMPT_TEMPLATE)[0]["generated_text"]
-    print(f"Result: {result}")
+   
     
 
     print("DONE")
